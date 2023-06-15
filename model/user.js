@@ -4,9 +4,10 @@ const userSchema = new mongoose.Schema({
     name: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true, select: true},
+    isAdmin: {type: Boolean, required: true, default: false},
     confirm_password: {type: String, required: true}
 }, { timestamps: true });
 
-const userModel = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
-export default userModel;
+export default User;
