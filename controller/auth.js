@@ -8,10 +8,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-/* register */
+// register 
 export const register = async (req, res) => {
     try {
-        const { name, email, password, confirm_password } = req.body;
+        const { name, email, password, isAdmin } = req.body;
         
         // checking for the existence of the user
         const emailExist = await User.findOne({ email });
@@ -26,7 +26,8 @@ export const register = async (req, res) => {
         const newUser = new User({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            isAdmin
         });
         const user = await newUser.save();
         return res.status(201).json({msg:'New user created!', user: user});
@@ -35,7 +36,7 @@ export const register = async (req, res) => {
     }
 }
 
-/* login */
+// login 
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -67,11 +68,13 @@ export const login = async (req, res) => {
     }
 }
 
+// logout
 export const logout = (req, res) => {
     res.clearCookie('auth_token');
     return res.status(200).json({ message: 'logout successful'});
 }
 
+// isLoggedIn
 export const isLoggedIn = (req, res) => {
     const token = req.cookies.auth_token;
 
@@ -85,4 +88,14 @@ export const isLoggedIn = (req, res) => {
         }
         return res.json(true);
     });
+}
+
+// isAdmin
+export const isAdmin = (req, res, next) => {
+    console.log(req.user);
+    if(req.user && req.user.isAdmin) {
+        next()
+    } else {
+        return res.status(401).json({message: 'Not authorized as admin'})
+    }
 }

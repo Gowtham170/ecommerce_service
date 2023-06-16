@@ -5,7 +5,7 @@ import { User } from "../model/index.js";
 dotenv.config();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY; 
 
-export const checkAuth = (req, res, next) => {
+export default (req, res, next) => {
     const token = req.cookies.auth_token;
 
     if(!token) {

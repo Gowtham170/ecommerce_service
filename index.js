@@ -5,8 +5,11 @@ import morgan from 'morgan';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
+import chechAuth from './util/checkAuth.js';
 import authRoutes from './routes/auth.js';
+import userRoutes from './routes/user.js';
 import productRoutes from './routes/product.js';
+
 
 /* middlewares configuration */
 const app = express();
@@ -20,6 +23,7 @@ app.use(express.json());
 /* routes */
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
+app.use('/api', chechAuth, userRoutes);
 
 /* server and db configuration  */
 const PORT = process.env.PORT || 5000;
@@ -32,7 +36,3 @@ mongoose.connect(MONGO_DB_URL, {
 }).then(() => {
     app.listen(PORT, () => console.log(`Server is running on the http://localhost:${PORT}`));
 }).catch((err) => console.log(`${err} did not connect`));
-
-
-// /api/products 
-// /api/products/:id
