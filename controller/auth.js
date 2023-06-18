@@ -89,13 +89,3 @@ export const isLoggedIn = (req, res) => {
         return res.json(true);
     });
 }
-
-// isAdmin
-export const isAdmin = (req, res, next) => {
-    console.log(req.user);
-    if(req.user && req.user.isAdmin) {
-        next()
-    } else {
-        return res.status(401).json({message: 'Not authorized as admin'})
-    }
-}

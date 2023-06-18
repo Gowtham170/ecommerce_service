@@ -5,7 +5,7 @@ import { User } from "../model/index.js";
 dotenv.config();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY; 
 
-export default (req, res, next) => {
+export default async (req, res, next) => {
     const token = req.cookies.auth_token;
 
     if(!token) {
@@ -14,7 +14,7 @@ export default (req, res, next) => {
 
     try {
         const verifyToken = jwt.verify(token, JWT_SECRET_KEY);
-        const user = User.findById(verifyToken.id);
+        const user = await User.findById(verifyToken.id);
         if(!user) {
             return res.status(404).json({message: 'No user found'});
         }

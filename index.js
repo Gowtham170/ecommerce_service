@@ -6,10 +6,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import chechAuth from './util/checkAuth.js';
+import isAdmin  from './util/isAdmin.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/product.js';
-
 
 /* middlewares configuration */
 const app = express();
@@ -23,7 +23,7 @@ app.use(express.json());
 /* routes */
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
-app.use('/api', chechAuth, userRoutes);
+app.use('/api', chechAuth, isAdmin, userRoutes);
 
 /* server and db configuration  */
 const PORT = process.env.PORT || 5000;
