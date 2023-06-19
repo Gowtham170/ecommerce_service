@@ -1,8 +1,9 @@
-import { User } from '../model/index.js';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
+import { User } from '../model/index.js';
+import generateToken from '../util/generateToken.js';
 
 //JWT_SECRET_KEY
 dotenv.config();
@@ -31,8 +32,8 @@ export const register = async (req, res) => {
         });
         const user = await newUser.save();
         return res.status(201).json({msg:'New user created!', user: user});
-    } catch (err) {
-        return res.status(400).json(`Error: ${err}`);
+    } catch (error) {
+        return res.status(400).json(`Error: ${error}`);
     }
 }
 
@@ -44,7 +45,7 @@ export const login = async (req, res) => {
         //checking for the existence of the user
         const user = await User.findOne({email}).select('+password');
         if(!user) {
-            return res.status(404).json('user not found');
+            return res.status(400).json('Invalid email');
         } 
 
         //checking the correctness of the password
@@ -54,17 +55,10 @@ export const login = async (req, res) => {
         }
 
         //creating token
-        const payload = {
-            id: user._id, 
-            email: user.email
-        }
-        const token = jwt.sign(payload, JWT_SECRET_KEY, {expiresIn: '1d'});
-        return res.cookie('auth_token', token, {
-            httpOnly: true 
-        }).status(200).json({message: 'login successful'});
+        generateToken(res, user);
 
-    } catch (err) {
-        return res.status(400).json(`Error: ${err}`);
+    } catch (error) {
+        return res.status(400).json(`Error: ${error}`);
     }
 }
 
