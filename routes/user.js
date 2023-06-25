@@ -16,7 +16,7 @@ router.get('/user/profile', getUserProfile)
       .put('/user/profile', updateUserProfile);
 
 // admin routes
-router.get('/user', isAdmin, getUsers);
+router.get('/users', isAdmin, getUsers);
 router.get('/user/:id', isAdmin, getUserById)
       .put('/user/:id', isAdmin, updateUser)
       .delete('/user/:id', isAdmin, deleteUserById);
