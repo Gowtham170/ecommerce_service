@@ -14,6 +14,11 @@ export default (res, user) => {
     return res.cookie('auth_token', token, {
         httpOnly: true,
         maxAge: 24 * 60 * 60
-    }).status(200).json({message: 'login successful'});
+    }).status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin
+    });
 }
 
