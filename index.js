@@ -9,6 +9,7 @@ import chechAuth from './util/checkAuth.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/product.js';
+import orderRoutes from './routes/order.js';
 
 /* middlewares configuration */
 const app = express();
@@ -23,6 +24,8 @@ app.use(express.json());
 app.use('/api', authRoutes);
 app.use('/api', productRoutes);
 app.use('/api', chechAuth, userRoutes);
+app.use('/api', orderRoutes);
+
 
 /* server and db configuration  */
 const PORT = process.env.PORT || 5000;
