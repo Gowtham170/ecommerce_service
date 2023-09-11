@@ -13,7 +13,7 @@ export default (res, user) => {
     const token = jwt.sign(payload, JWT_SECRET_KEY, {expiresIn: '1d'});
     return res.cookie('auth_token', token, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60
+        // maxAge: 24 * 60 * 60
     }).status(200).json({
         _id: user._id,
         name: user.name,

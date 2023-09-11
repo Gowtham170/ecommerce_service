@@ -7,20 +7,20 @@ import {
     updateOrderToPaid,
     updateOrderToDelivered
 } from '../controller/order.js';
-import checkAuth from "../util/checkAuth.js";
+
 import isAdmin  from '../util/isAdmin.js';
 
 const router = express.Router();
 
-router.post('/orders', checkAuth, createOrder)
+router.post('/orders', createOrder)
     // admin route
-    .get('/orders', checkAuth, isAdmin, getOrders);
+    .get('/orders', isAdmin, getOrders);
 
-router.get('/orders/myorders', checkAuth, getMyOrders);
-router.put('/order/:id/pay', checkAuth, updateOrderToPaid);
+router.get('/orders/myorders', getMyOrders);
+router.put('/orders/:id/pay', updateOrderToPaid);
+router.get('/orders/:id', getOrderById);
 
 // admin routes
-router.get('/orders/:id', checkAuth, isAdmin, getOrderById);
-router.put('/order/:id/deliver', checkAuth, isAdmin,updateOrderToDelivered);
+router.put('/orders/:id/deliver', isAdmin,updateOrderToDelivered);
 
 export default router;

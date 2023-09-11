@@ -81,23 +81,22 @@ const updateUser = async (req, res) => {
     try {
         const id = req.params.id;
         const user = await User.findById(id);
-
-        if (!user) {
+        if (user) {
+            user.name = req.body.name || user.name;
+            user.email = req.body.email || user.email;
+            user.isAdmin = Boolean(req.body.isAdmin);
+    
+            const updateUser = await user.save();
+    
+            return res.status(200).json({
+                id: updateUser._id,
+                name: updateUser.name,
+                email: updateUser.email,
+                isAdmin: updateUser.isAdmin
+            });
+        } else {
             return res.status(404).json('user not found');
         }
-
-        user.name = req.body.name || user.name;
-        user.email = req.body.email || user.email;
-        user.isAdmin = Boolean(req.body.isAdmin);
-
-        const updateUser = await user.save();
-
-        return res.status(200).json({
-            id: updateUser._id,
-            name: updateUser.name,
-            email: updateUser.email,
-            isAdmin: updateUser.isAdmin
-        });
     } catch (error) {
         return res.status(400).json(`Error: ${error}`);
     }
@@ -109,23 +108,22 @@ const deleteUserById = async (req, res) => {
         const id = req.params.id
         const user = await User.findById(id);
 
-        if (!user) {
-            return res.status(404).json('user not found');
-        } else {
+        if (user) {
             if(user.isAdmin) {
-                return res.status(400).json(`can't delete admin user`);
+                return res.status(401).json({message:`can't delete admin user`});
             }
             const deleteUser = await User.deleteOne(user._id);
-            res.status(200).json({user: deleteUser, message: 'user deleted successful'});
+            return res.status(200).json({user: deleteUser, message: 'user deleted'}); 
+        } else {
+            return res.status(404).json('user not found');
         }
-
-        return res.status(200).json(user);
     } catch (error) {
         return res.status(400).json(`Error: ${error}`);
     }
 }
 
-export { getUserProfile, 
+export { 
+    getUserProfile, 
     updateUserProfile, 
     getUsers, 
     getUserById, 
