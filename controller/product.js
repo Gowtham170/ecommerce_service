@@ -3,7 +3,10 @@ import { Product } from "../model/index.js";
 //get all products
 const getProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        const keyword = req.query.keyword 
+            ? { name: { $regex: req.query.keyword, $options: 'i'}}
+            : {};
+        const products = await Product.find({...keyword});
         return res.status(200).json(products);
     } catch (error) {
         return res.status(400).json(`Error: ${error}`);
@@ -96,7 +99,7 @@ const createProductReview = async (req, res) => {
                 (review) => review.user.toString() === req.user._id.toString()
             );
             if(alreadyReviewed) {
-                res.status(400).json('Product already reviewed');
+                return res.status(400).json({ message: 'Product already reviewed' });
             }
 
             const review = {
@@ -120,6 +123,15 @@ const createProductReview = async (req, res) => {
     }
 }
 
+// getTopProducts
+const getTopProducts = async (req, res) => {
+    try {
+        const product = await Product.find({}).sort({ rating: -1}).limit(3);
+        return res.status(200).json(product);
+    } catch (error) {
+        return res.status(400).json(`Error: ${error}`);
+    }
+}
 
 export { 
     getProducts, 
@@ -127,5 +139,6 @@ export {
     createProduct, 
     updateProduct,
     deleteProduct,
-    createProductReview
+    createProductReview,
+    getTopProducts
 }

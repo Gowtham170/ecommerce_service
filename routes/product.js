@@ -5,7 +5,8 @@ import {
       createProduct, 
       updateProduct, 
       deleteProduct,
-      createProductReview
+      createProductReview,
+      getTopProducts
 } from '../controller/product.js';
 
 import checkAuth from '../util/checkAuth.js';
@@ -15,9 +16,10 @@ const router = express.Router();
 
 router.get('/products', getProducts)
       .post('/products', checkAuth, isAdmin, createProduct);
+router.get('/products/top', getTopProducts);
 router.get('/products/:id', getProductById)
       .put('/products/:id', checkAuth, isAdmin, updateProduct)
       .delete('/products/:id', checkAuth, isAdmin, deleteProduct);
-router.post('/:id/reviews', checkAuth, createProductReview);
+router.post('/products/:id/reviews', checkAuth, createProductReview);
 
 export default router;
